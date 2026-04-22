@@ -1,55 +1,55 @@
 # Players' Ball Possession Estimation During Football Matches
 
-Questo progetto implementa un sistema di visione artificiale per la stima automatica del possesso palla, a livello individuale e di squadra, in ambito calcistico. Il sistema analizza filmati video di tipo broadcast per estrarre statistiche oggettive e scalabili.
+This project implements a computer vision system for the automated estimation of ball possession at both individual and team levels. The system analyzes broadcast soccer footage to extract objective and scalable performance metrics.
 
-## Indice
-- [Obiettivi del Progetto](#obiettivi-del-progetto)
-- [Architettura del Sistema](#architettura-del-sistema)
-- [Tecnologie e Modelli](#tecnologie-e-modelli)
-- [Metodologia e Raffinamento](#metodologia-e-raffinamento)
-- [Risultati Sperimentali](#risultati-sperimentali)
-- [Autori](#autori)
+## Table of Contents
+- [Project Objectives](#project-objectives)
+- [System Architecture](#system-architecture)
+- [Technologies and Models](#technologies-and-models)
+- [Methodology and Refinement](#methodology-and-refinement)
+- [Experimental Results](#experimental-results)
+- [Authors](#authors)
 
-## Obiettivi del Progetto
-L'analisi automatizzata del possesso palla mira a superare i limiti dell'annotazione manuale, soggetta a errori e tempi di esecuzione elevati. Le principali sfide affrontate riguardano:
-* Tracking di oggetti di piccole dimensioni (palla) ad alta velocità.
-* Gestione del motion blur e della risoluzione broadcast standard (~640px).
-* Risoluzione di occlusioni frequenti tra i giocatori.
-* Gestione di apparenze visive simili tra i componenti della stessa squadra.
+## Project Objectives
+Automated ball possession analysis aims to overcome the limitations of manual annotation, which is time-consuming, subjective, and difficult to scale. The main technical challenges addressed include:
+* Tracking small objects (the ball) moving at high speeds.
+* Managing motion blur and standard broadcast resolution (~640px).
+* Handling frequent occlusions between players.
+* Managing similar visual appearances among teammates.
 
-## Architettura del Sistema
-Il sistema è strutturato in una pipeline sequenziale:
+## System Architecture
+The system is structured as a sequential pipeline:
 
-1.  **Object Detection**: Localizzazione di palla, giocatori, portieri e arbitri.
-2.  **Multi-Object Tracking (MOT)**: Associazione temporale delle rilevazioni per mantenere la continuità delle identità.
-3.  **Re-Identification (ReID)**: Estrazione di descrittori visivi per il recupero dell'identità dopo lunghe occlusioni o uscite di campo.
-4.  **Data Refinement**: Post-elaborazione tramite interpolazione dei dati mancanti e gestione dei conflitti di identificazione.
-5.  **Possession Logic**: Calcolo dei tempi di possesso basato sull'intersezione spaziale tra le bounding box dei giocatori e della palla.
+1.  **Object Detection**: Localization of the ball, players, goalkeepers, and referees.
+2.  **Multi-Object Tracking (MOT)**: Temporal association of detections to maintain identity continuity.
+3.  **Re-Identification (ReID)**: Extraction of visual descriptors to recover identities after long occlusions or players leaving the field of view.
+4.  **Data Refinement**: Post-processing via data interpolation and identification conflict management.
+5.  **Possession Logic**: Calculation of possession times based on the spatial intersection (overlap) between player and ball bounding boxes.
 
-## Tecnologie e Modelli
-* **Rilevamento**: YOLO11 (Ultralytics), ottimizzato tramite fine-tuning sul dataset SoccerNet.
-* **Tracciamento**: BoT-SORT, che integra predizione del movimento e analisi dell'apparenza.
-* **ReID**: OSNet (Omni-Scale Network) per l'estrazione di embedding robusti.
-* **Dataset**: SoccerNet-Tracking 2022, basato su 12 partite della Swiss Super League.
+## Technologies and Models
+* **Detection**: YOLO11 (Ultralytics), fine-tuned on the SoccerNet dataset.
+* **Tracking**: BoT-SORT, integrating motion prediction and appearance analysis.
+* **ReID**: OSNet (Omni-Scale Network) for robust embedding extraction.
+* **Dataset**: SoccerNet-Tracking 2022, based on 12 matches from the Swiss Super League.
 
-## Metodologia e Raffinamento
-Per migliorare l'accuratezza del sistema sono state integrate le seguenti componenti tecniche:
-* **Algoritmo Ungarico**: Utilizzato per risolvere il problema dell'assegnazione ottimale tra i frame.
-* **Swap Guard**: Meccanismo di sicurezza basato su soglie di confidenza degli embedding per prevenire lo scambio accidentale di ID tra giocatori vicini.
-* **Interpolazione Lineare**: Applicata per stimare la posizione della palla nei frame in cui il rilevatore non fornisce output validi, garantendo continuità statistica.
+## Methodology and Refinement
+To improve system robustness, several technical components were integrated:
+* **Hungarian Algorithm**: Used to solve the optimal assignment problem between frames.
+* **Swap Guard**: A safety mechanism based on embedding confidence thresholds to prevent accidental ID switches between nearby players.
+* **Linear Interpolation**: Applied to estimate the ball's position during frames where the detector fails, ensuring statistical continuity.
 
-## Risultati Sperimentali
-Il sistema è stato valutato utilizzando metriche standard per il tracking multi-oggetto. Le performance sui soggetti umani (giocatori e arbitri) mostrano una Recall compresa tra il 97% e il 98%.
+## Experimental Results
+The system was evaluated using standard metrics for multi-object tracking. Performance on human subjects (players and referees) shows a Recall between 97% and 98%.
 
-| Metrica | Risultato |
+| Metric | Result |
 | :--- | :--- |
 | Precision | 88.1% |
 | Recall | 81.3% |
 | MOTA | 63.0% |
 | HOTA | 37.7% |
 
-## Autori
-Progetto realizzato per il corso di Computer Vision, A.A. 2025/2026, Sapienza Università di Roma.
+## Authors
+Project developed for the Computer Vision course, A.Y. 2025/2026, Sapienza University of Rome.
 
 * Davide Perniconi (1889270)
 * Stefano Passanante (2158181)
